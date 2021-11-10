@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--- 命名空间 namespace -->
+<mapper namespace="com.brave.dao.UpmsUserDao">
+
+    <!-- 结果集映射 -->
+    <resultMap type="com.brave.model.UpmsUser" id="upmsUser">
+        <id column="user_id" property="userId"/>
+        <result column="loginname" property="loginname"/>
+        <result column="password" property="password"/>
+        <result column="realname" property="realname"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="is_locked" property="locked"/>
+        <result column="gmt_create" property="gmtCreate"/>
+        <result column="gmt_modified" property="gmtModified"/>
+    </resultMap>
+    <!-- 查询sql -->
+    <select id="selectOne" resultMap="upmsUser">
+        select * from upms_user where user_id = #{userId}
+    </select>
+
+    <select id="selectUser" resultMap="upmsUser">
+        select * from upms_user
+    </select>
+
+    <insert id="insertUser">
+        insert into upms_user (user_id,loginname,password,realname,is_locked)
+            value(#{userId},#{loginname},#{password},#{realname},#{locked})
+    </insert>
+
+</mapper>
