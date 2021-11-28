@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SeatMapper">
+
+    <sql id="selectAllColumns">
+        SELECT * FROM Seat
+    </sql>
+
+    <select id="findSeatByOrder" parameterType="Entity.Order"
+            resultType="Entity.Seat">
+        select * from Seat where SeatId = #{SeatId}
+    </select>
+
+    <!--通过SeatId查询-->
+    <select id="findSeatById" parameterType="String"
+            resultType="Entity.Seat">
+        select * from Seat where SeatId = #{value}
+    </select>
+    <!--通过SeatId查询-->
+    <select id="findSeatById2" parameterType="String" resultType="Entity.Seat">
+        <include refid="selectAllColumns"></include>
+        WHERE SeatId = #{SeatId}
+    </select>
+
+    <!--通过SeatPosition查询-->
+    <select id="findSeatBySeatPosition" parameterType="String"
+            resultType="Entity.Seat">
+        select * from Seat where SeatPosition like '%${value}%'
+    </select>
+
+    <!-- 添加Seat信息 -->
+    <insert id="addSeat" parameterType="Entity.Seat">
+        insert into Seat(SeatId,SeatPosition,SeatStatus) values(#{SeatId},#{SeatPosition},#{SeatStatus})
+    </insert>
+
+    <!-- 通过SeatId删除 -->
+    <delete id="deleteSeatById" parameterType="String">
+        DELETE FROM Seat WHERE SeatId = #{SeatId}
+    </delete>
+
+    <!-- 修改方法 -->
+    <update id="updateSeat" parameterType="Entity.Seat">
+        UPDATE Seat SET
+                        SeatPosition=#{SeatPosition},SeatStatus=#{SeatStatus}
+        where SeatId = #{SeatId}
+    </update>
+
+    <!--条件查询-->
+    <sql id="querySeatWhere">
+        <if test="SeatId!=0 and SeatId!='' and SeatId!=null">
+            AND SeatId = #{SeatId}
+        </if>
+        <if test="SeatPosition!='' and SeatPosition!=null">
+            AND SeatPosition = #{SeatPosition}
+        </if>
+        <if test="SeatStatus!='' and SeatStatus!=null">
+            AND SeatStatus = #{SeatStatus}
+        </if>
+    </sql>
+    <select id="findSeatsByConditions" parameterType="Entity.Seat"
+            resultType="Entity.Seat">
+        <include refid="selectAllColumns"></include>
+        <where>
+            <include refid="querySeatWhere"></include>
+        </where>
+    </select>
+
+    <!--得到Map对应一行数据-->
+    <select id="findSeatMap" parameterType="Entity.Seat"
+            resultType="java.util.Map">
+        <include refid="selectAllColumns"></include>
+        <where>
+            <include refid="querySeatWhere"></include>
+        </where>
+    </select>
+
+
+
+
+</mapper>

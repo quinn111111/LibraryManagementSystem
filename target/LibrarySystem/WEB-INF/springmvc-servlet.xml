@@ -26,6 +26,7 @@
     <!--配置Handler-->
     <bean id="helloController" class="Controllers.HelloController"></bean>
 
+
     <!-- 视图解析器：DispatcherServlet给他的ModelAndView-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="InternalResourceViewResolver">
         <!-- 前缀 -->

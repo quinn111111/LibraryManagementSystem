@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserInLibMapper">
+
+    <sql id="selectAllColumns">
+        SELECT * FROM UserInLib
+    </sql>
+
+    <!--通过id查询-->
+    <select id="findUserInLibById" parameterType="String"
+            resultType="Entity.UserInLib">
+        select * from UserInLib where UserId = #{value}
+    </select>
+    <select id="findUserInLibById2" parameterType="String" resultType="Entity.UserInLib">
+        <include refid="selectAllColumns"/>
+        WHERE UserId = #{UserId}
+    </select>
+
+
+    <!-- 添加信息 -->
+    <insert id="addUserInLib" parameterType="Entity.UserInLib">
+        insert into UserInLib(UserId,TimeInLib) values(#{UserId},#{TimeInLib})
+    </insert>
+
+    <!-- 删除方法 -->
+    <delete id="deleteUserInLibById" parameterType="String">
+        DELETE FROM UserInLib WHERE UserId = #{UserId}
+    </delete>
+
+    <!-- 修改方法 -->
+    <update id="updateUserInLib" parameterType="Entity.UserInLib">
+        UPDATE UserInLib SET
+                        TimeInLib=#{TimeInLib}
+        where UserInLibId = #{UserId}
+    </update>
+
+</mapper>
