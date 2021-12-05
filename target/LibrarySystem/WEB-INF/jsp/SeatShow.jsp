@@ -1,4 +1,4 @@
-<%--
+<%@ page import="Entity.SeatOrder" %><%--
   Created by IntelliJ IDEA.
   User: han
   Date: 2021/11/18
@@ -14,29 +14,40 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
-        function toVaild(){
+
+    function toCopy() {
+        document.getElementById("OrderDate2").value = document.getElementById("OrderDate").value;
+        document.getElementById("BeginTime2").value = document.getElementById("BeginTime").value;
+        document.getElementById("EndTime2").value = document.getElementById("EndTime").value;
+        document.getElementById("Floor2").value = document.getElementById("Floor").value;
+        return true;
+    }
+
+    function toVaild(){
             var orderDate = document.getElementById("OrderDate").value;
             var beginTime = document.getElementById("BeginTime").value;
             var endTime = document.getElementById("EndTime").value;
-            var date = new Date(orderDate);
 
+            var beginDate = new Date(orderDate+" "+beginTime);
             var nowDate = new Date();
+            var endDate = new Date(orderDate+" "+endTime);
 
-            var nowHour = nowDate.getHours();
-            var nowMinute = nowDate.getMinutes();
+            var openDate = new Date(orderDate+" "+"08:00:00");
+            var closeDate = new Date(orderDate+" "+"22:00:00");
 
-            var inputHour = beginTime.substr(0,2);
-            var inputMinute = beginTime.substr(2,4);
+            alert("beginDate="+beginDate+"nowDate="+nowDate+"endDate="+endDate);
 
-            alert("nowHour="+nowHour+",nowMinute="+nowMinute+",inputHour="+inputHour+",inputMinute="+inputMinute);
-
-            if(date <= nowDate)
+            if(beginDate <= nowDate)
             {
-                alert("输入日期不正确！");
+                alert("输入日期不正确！请重新输入！");
                 return false;
             }
-            else if(inputHour <= nowHour||((inputHour===nowHour)&&(inputMinute<=nowMinute))){
-                alert("输入时间不正确！");
+            else if(endDate <= beginDate){
+                alert("离馆时间不正确！请重新输入！");
+                return false;
+            }
+            else if(beginDate < openDate || endDate > closeDate){
+                alert("请在图书馆的开放时间内预定！（8:00-22:00）");
                 return false;
             }
             else{
@@ -44,6 +55,8 @@
                 return true;
             }
         }
+
+
         window.onload = function addListener(){
             for (let i = 1; i <= 6; i++)
             {
@@ -95,31 +108,31 @@
                     <div class="form-group">
                         <label for="OrderDate">预约日期：</label>
                         <input type="date" class="form-control" id="OrderDate" name="OrderDate"
-                            <c:if test="${order.orderDate!=null}">
-                                value="${order.orderDate}"
+                            <c:if test="${seatOrder.orderDate!=null}">
+                                value="${seatOrder.orderDate}"
                             </c:if>
                         >
                     </div>
                     <div class="form-group">
                         <label for="BeginTime">到馆时间：</label>
                         <input type="time" class="form-control" id="BeginTime" name="BeginTime"
-                        <c:if test="${order.beginTime!=null}">
-                               value="${order.beginTime}"
+                        <c:if test="${seatOrder.beginTime!=null}">
+                               value="${seatOrder.beginTime}"
                         </c:if>
                         >
                     </div>
                     <div class="form-group">
                         <label for="EndTime">离馆时间：</label>
                         <input type="time" class="form-control" id="EndTime" name="EndTime"
-                        <c:if test="${order.endTime!=null}">
-                               value="${order.endTime}"
+                        <c:if test="${seatOrder.endTime!=null}">
+                               value="${seatOrder.endTime}"
                         </c:if>>
                     </div>
                     <div class="form-group">
                         <label for="floor">选择楼层：</label>
-                        <select class="form-control" name="floor" id="floor" name="floor"
-                            <c:if test="${order.floor!=null}">
-                                value="${order.floor}"
+                        <select class="form-control" name="Floor" id="Floor"
+                            <c:if test="${seatOrder.floor!=null}">
+                                value="${seatOrder.floor}"
                             </c:if>>
                         >
                             <option>1</option>
@@ -337,9 +350,24 @@
             </table>
             <div>
 
+                <form class="form-inline" role="form" action="${pageContext.request.contextPath}/SeatOrder" onsubmit="toCopy()">
+                    <div class="form-group">
+                        <label class="sr-only" for="SeatId">座位位置：</label>
+                        <input type="text" class="form-control" id="SeatId" name="SeatId"
+                               placeholder="请输入座位位置：">
+                    </div>
+                    <input type="hidden" name="OrderDate" id="OrderDate2">
+                    <input type="hidden" name="BeginTime" id="BeginTime2">
+                    <input type="hidden" name="EndTime" id="EndTime2">
+                    <input type="hidden" name="Floor" id="Floor2">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-default">点击预约</button>
+                    </div>
+
+                </form>
+
             </div>
         </div>
     </div>
-
 </body>
 </html>

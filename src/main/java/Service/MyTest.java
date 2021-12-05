@@ -1,6 +1,8 @@
 package Service;
 
+import Entity.SeatOrder;
 import dao.SeatMapper;
+import dao.SeatOrderMapper;
 import dao.StudentMapper;
 import dao.User1Mapper;
 import Entity.Student;
@@ -20,24 +22,11 @@ public class MyTest {
     public void selectStudent() throws IOException {
         SqlSession session = MybatisUtils.getSession();
 
-        StudentMapper mapper = session.getMapper(StudentMapper.class);
-        List<Student> studentList = mapper.selectStudent();
-
-        User1Mapper mapper1 = session.getMapper(User1Mapper.class);
-        List<User1> user1List = mapper1.selectUser();
-
-        SeatMapper mapper2 = session.getMapper(SeatMapper.class);
-
-        for(Student s:studentList){
-            System.out.println(s.getName());
+        SeatOrderMapper mapper = session.getMapper(SeatOrderMapper.class);
+        List<SeatOrder> seatOrderList = mapper.findOrderByUserId("1");
+        for(SeatOrder seatOrder : seatOrderList){
+            System.out.println(seatOrder);
         }
-
-        for(User1 u: user1List){
-            System.out.println(u.getUserName());
-        }
-
-
-
         session.close();
 
     }

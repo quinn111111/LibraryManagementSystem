@@ -8,7 +8,7 @@
         SELECT * FROM Seat
     </sql>
 
-    <select id="findSeatByOrder" parameterType="Entity.Order"
+    <select id="findSeatByOrder" parameterType="Entity.SeatOrder"
             resultType="Entity.Seat">
         select * from Seat where SeatId = #{SeatId}
     </select>
@@ -18,6 +18,9 @@
             resultType="Entity.Seat">
         select * from Seat where SeatId = #{value}
     </select>
+
+
+
     <!--通过SeatId查询-->
     <select id="findSeatById2" parameterType="String" resultType="Entity.Seat">
         <include refid="selectAllColumns"></include>
@@ -75,8 +78,5 @@
             <include refid="querySeatWhere"></include>
         </where>
     </select>
-
-
-
 
 </mapper>

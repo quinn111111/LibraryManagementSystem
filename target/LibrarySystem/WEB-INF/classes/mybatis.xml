@@ -17,9 +17,8 @@
     <mappers>
         <mapper resource="Mapper/StudentMapper.xml"/>
         <mapper resource="Mapper/User1Mapper.xml"/>
-
-        <mapper resource="Mapper/OrderMapper.xml"/>
         <mapper resource="Mapper/SeatMapper.xml"/>
+        <mapper resource="Mapper/SeatOrderMapper.xml"/>
         <mapper resource="Mapper/UserInLibMapper.xml"/>
         <mapper resource="Mapper/UserMapper.xml"/>
     </mappers>

@@ -1,70 +1,100 @@
 package Controllers;
 
-import Entity.Order;
-import Entity.Seat;
+import Entity.SeatOrder;
 import Utils.MybatisUtils;
-import dao.OrderMapper;
-import dao.SeatMapper;
+import dao.SeatOrderMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
 public class OrderController {
     @RequestMapping("/OrderIndex")
-    public ModelAndView SeatOrder() {
+    public ModelAndView SeatOrder() throws ParseException {
+        ModelAndView mav = new ModelAndView("OrderIndex");
+/*        SqlSession session = MybatisUtils.getSession();
+        SeatOrderMapper orderMapper = session.getMapper(SeatOrderMapper.class);
+        List<SeatOrder> orderList = orderMapper.findOrderByUserId("1");*/
 
+        /*
         SqlSession session = MybatisUtils.getSession();
-        OrderMapper mapper = session.getMapper(OrderMapper.class);
+        SeatOrderMapper seatOrderMapper = session.getMapper(SeatOrderMapper.class);
+
+        List<SeatOrder> seatOrders = seatOrderMapper.findOrderByUserId("1");
+
+        System.out.println(1111);
+        if(seatOrders!=null){
+            SeatOrder seatOrder = seatOrders.get(0);
+            String floor = seatOrder.getFloor();
+            String seatId = seatOrder.getSeatId();
+            seatOrder.setSeatId(seatOrder.getSeatId().substring(1,5));
 
 
-        return new ModelAndView("OrderIndex");
+            SimpleDateFormat myFormatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+            Date date= myFormatter.parse(seatOrder.getOrderDate()+" "+seatOrder.getBeginTime());
+            Date mydate= new Date();
+
+
+            long ms = date.getTime()-mydate.getTime();
+
+            System.out.println( "相差的日期: "+ms);
+
+            long day = ms/(24*60*60*1000);
+            ms = ms%(24*60*60*1000);
+            long hour = ms/(60*60*1000);
+            ms = ms%(60*60*1000);
+            long minute = ms/(60*1000);
+
+
+            mav.addObject("day",day);
+            mav.addObject("hour",hour);
+            mav.addObject("minute",minute);
+            mav.addObject("flag",true);
+            mav.addObject("floor",floor);
+            mav.addObject("seatId",seatId);
+        }
+*/
+
+
+        return mav;
     }
 
+/*
+    @ModelAttribute("OrderItem")
+    public Map<String,SeatOrder> getItem(SeatOrder seatOrder)throws Exception{
+        HashMap<String,SeatOrder> OrderItem= new HashMap<String, SeatOrder>();
+        OrderItem.put("seatOrder",seatOrder);
+        return OrderItem;
+    }*/
 
     @RequestMapping("/SeatShow")
-    public ModelAndView SeatShow(Order order) {
+    public ModelAndView SeatShow(SeatOrder seatOrder) throws Exception {
         ModelAndView mav = new ModelAndView("SeatShow");
         SqlSession session = MybatisUtils.getSession();
 
+        System.out.println(seatOrder.getOrderDate());
+        System.out.println(seatOrder.getBeginTime());
+        System.out.println(seatOrder.getEndTime());
+        System.out.println(seatOrder.getFloor());
 
-        System.out.println(order.getOrderDate());
-        System.out.println(order.getBeginTime());
-        System.out.println(order.getEndTime());
-        System.out.println(order.getFloor());
+        SeatOrderMapper orderMapper = session.getMapper(SeatOrderMapper.class);
 
-
-
-        OrderMapper orderMapper = session.getMapper(OrderMapper.class);
-
-
-        List<Order> orderList = orderMapper.findOrderByTime(order);
-
+        List<SeatOrder> orderList = orderMapper.findOrderByTime(seatOrder);
 
         Map<String, String> SeatIdMap = new HashMap<>();
-        for(Order order1:orderList){
+        for(SeatOrder order1:orderList){
             String SeatId = order1.getSeatId();
             String SeatId1 = SeatId.substring(1,5);
             SeatIdMap.put(SeatId1,"disabled");
         }
 
         mav.addObject("SeatIdMap",SeatIdMap);
-/*
-        SeatMapper seatMapper = session.getMapper(SeatMapper.class);
-        List<Seat>seatList = new ArrayList<Seat>();
-        for(Order order1:orderList){
-            System.out.println(order1);
-            Seat seat = seatMapper.findSeatByOrder(order1);
-            seatList.add(seat);
-            System.out.println(seat.getSeatPosition());
-        }
-*/
-
-        mav.addObject("order",order);
-/*        mav.addObject("seatList",seatList);*/
+        mav.addObject("seatOrder",seatOrder);
 
         return mav;
     }
@@ -72,36 +102,35 @@ public class OrderController {
 
 
     @RequestMapping("/SeatOrder")
-    public ModelAndView SeatOrder(Order order) {
-
-
-        System.out.println(order.getSeatId());
-        System.out.println(order.getOrderDate());
-        System.out.println(order.getBeginTime());
-        System.out.println(order.getEndTime());
+    public ModelAndView SeatOrder(SeatOrder seatOrder) {
 
 
         Date date = new Date();
-        order.setOrderId(Long.toString(date.getTime()));
-        order.setVerifyCode(Integer.toString((int)((Math.random()*9+1)*100000)));
+        seatOrder.setOrderId(Long.toString(date.getTime()));
+        seatOrder.setVerifyCode(Integer.toString((int)((Math.random()*9+1)*100000)));
 
-        order.setUserId("1");
-        order.setSeatId(order.getFloor()+order.getSeatId());
+        seatOrder.setUserId("1");
+        seatOrder.setSeatId(seatOrder.getFloor()+seatOrder.getSeatId());
+
+        System.out.println(seatOrder.getSeatId());
+        System.out.println(seatOrder.getOrderDate());
+        System.out.println(seatOrder.getBeginTime());
+        System.out.println(seatOrder.getEndTime());
 
 
         SqlSession session = MybatisUtils.getSession();
-        OrderMapper mapper = session.getMapper(OrderMapper.class);
-        mapper.addOrder(order);
+        SeatOrderMapper mapper = session.getMapper(SeatOrderMapper.class);
+        mapper.addOrder(seatOrder);
         session.commit();
         session.close();
 
-        ModelAndView  model = new ModelAndView("/Rules");
-        model.addObject("Order",order);
+        ModelAndView  model = new ModelAndView("/FirmPage");
+        model.addObject("seatOrder",seatOrder);
         return model;
     }
     @RequestMapping("/Rules")
-    public ModelAndView Rules(Order order){
-        System.out.println(order.getOrderId());
+    public ModelAndView Rules(SeatOrder seatOrder){
+        System.out.println(seatOrder.getOrderId());
         return new ModelAndView("/Rules");
     }
 }

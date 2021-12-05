@@ -47,10 +47,10 @@
         </ul>
         <div align="center" style="padding: 50px">
             <p style="font-size: 40px;font-family:'楷体';">图书馆</p>
-            <p style="font-size: 30px;color: royalblue;font-family:'楷体';">2楼 204 A023座</p>
+            <p style="font-size: 30px;color: royalblue;font-family:'楷体';">${floor}楼 ${seatId}座</p>
             <p style="font-size: 20px;color: gray;font-family:'楷体';">（开放时间：8:00-22:00）</p>
             <p style="font-size: 20px;color: gray;font-family:'楷体';">距离最后入座时间还有：</p>
-            <p style="font-size: 40px;font-family:'楷体';">00:11:52</p>
+            <p style="font-size: 40px;font-family:'楷体';">${day}:${hour}:${minute}:00</p>
             <p style="font-size: 40px;font-family:'楷体';">状态：待入座</p>
         </div>
         <div>

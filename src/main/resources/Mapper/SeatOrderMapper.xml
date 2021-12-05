@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SeatOrderMapper">
+
+    <sql id="selectAllColumns">
+        SELECT * FROM SeatOrder
+    </sql>
+
+    <select id="findOrderByUserId" parameterType="String" resultType="Entity.SeatOrder">
+        select * from SeatOrder
+        where UserId = ${UserId}
+    </select>
+
+
+    <select id="findOrderByTime" parameterType="String" resultType="Entity.SeatOrder">
+        select * from SeatOrder
+        where Floor = #{Floor}
+        AND OrderDate = #{OrderDate}
+        and (
+        (BeginTime &lt;= #{BeginTime} and EndTime > #{BeginTime}) OR
+        (EndTime >= #{EndTime} and BeginTime &lt; #{EndTime}) OR
+        (BeginTime >= #{BeginTime} and EndTime &lt;= #{EndTime})
+        )
+    </select>
+
+
+    <!-- 添加信息 -->
+    <insert id="addOrder" parameterType="Entity.SeatOrder">
+        insert into SeatOrder (OrderId,VerifyCode,OrderDate,BeginTime,EndTime,Floor,UserId,SeatId) values(#{OrderId},#{VerifyCode},#{OrderDate},#{BeginTime},#{EndTime},#{Floor},#{UserId},#{SeatId})
+    </insert>
+
+    <!-- 删除方法 -->
+    <delete id="deleteOrderById" parameterType="String">
+        DELETE FROM SeatOrder WHERE OrderId = #{OrderId}
+    </delete>
+
+    <!-- 修改方法 -->
+    <update id="updateOrder" parameterType="Entity.SeatOrder">
+        UPDATE SeatOrder SET
+                        VerifyCode=#{VerifyCode},StartTime=#{StartTime},UserId=#{UserId},SeatId=#{SeatId},Floor=#{Floor},BeginTime=#{BeginTime},EndTime=#{EndTime}
+        where OrderId = #{OrderId}
+    </update>
+
+
+    <!--条件查询-->
+    <sql id="queryOrderWhere">
+        <if test="OrderId!=0 and OrderId!='' and OrderId!=null">
+            AND OrderId = #{OrderId}
+        </if>
+        <if test="VerifyCode!='' and VerifyCode!=null">
+            AND VerifyCode = #{VerifyCode}
+        </if>
+        <if test="OrderStatus!='' and OrderStatus!=null">
+            AND StartTime = #{StartTime}
+        </if>
+        <if test="UserId!='' and UserId!=null">
+            AND UserId = #{UserId}
+        </if>
+        <if test="SeatId!='' and SeatId!=null">
+            AND SeatId = #{SeatId}
+        </if>
+    </sql>
+    <select id="findOrdersByConditions" parameterType="Entity.SeatOrder"
+            resultType="Entity.SeatOrder">
+        <include refid="selectAllColumns"></include>
+        <where>
+            <include refid="queryOrderWhere"></include>
+        </where>
+    </select>
+
+
+    <select id="findOrderMap" parameterType="Entity.SeatOrder"
+            resultType="java.util.Map">
+        <include refid="selectAllColumns"></include>
+        <where>
+            <include refid="queryOrderWhere"></include>
+        </where>
+    </select>
+
+</mapper>

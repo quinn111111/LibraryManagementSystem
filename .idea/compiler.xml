@@ -7,8 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="LibrarySystem" />
-        <module name="-Library-Management-System" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Spring" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>

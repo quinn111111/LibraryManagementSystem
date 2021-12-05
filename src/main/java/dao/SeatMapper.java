@@ -1,7 +1,7 @@
 package dao;
 
-import Entity.Order;
 import Entity.Seat;
+import Entity.SeatOrder;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,7 @@ public interface SeatMapper {
 
     Seat findSeatById(String SeatId);
     Seat findSeatById2(String SeatId);
+
 
     Seat findSeatBySeatPosition(String SeatPosition);
 
@@ -25,5 +26,5 @@ public interface SeatMapper {
 
     Map<String,Object> findSeatMap(Seat seat);
 
-    Seat findSeatByOrder(Order order);
+    Seat findSeatByOrder(SeatOrder seatOrder);
 }
